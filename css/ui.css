@@ -1,0 +1,88 @@
+#hud {
+    background-color: rgba(20, 20, 30, 0.85);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 100;
+    border-bottom: 1px solid var(--primary-accent);
+}
+
+#player-stats span {
+    margin-right: 15px;
+    font-size: 0.9em;
+}
+#player-stats .fas {
+    margin-right: 5px;
+    color: var(--primary-accent);
+}
+
+#game-menu button {
+    background-color: transparent;
+    border: 1px solid var(--primary-accent);
+    color: var(--primary-accent);
+    padding: 8px 12px;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 3px;
+}
+#game-menu button:hover {
+    background-color: var(--primary-accent);
+    color: var(--bg-color-dark);
+}
+
+#dialogue-box {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(30, 30, 45, 0.95);
+    border: 1px solid var(--primary-accent);
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 200;
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
+}
+#dialogue-speaker {
+    font-weight: bold;
+    color: var(--primary-accent);
+    margin-bottom: 10px;
+}
+#dialogue-options button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: var(--primary-accent);
+    color: var(--bg-color-dark);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+#dialogue-options button:hover {
+    opacity: 0.8;
+}
+
+/* SweetAlert2 Customization */
+.swal2-popup {
+    background-color: var(--bg-color-dark) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--primary-accent) !important;
+}
+.swal2-title {
+    color: var(--primary-accent) !important;
+}
+.swal2-confirm, .swal2-cancel, .swal2-deny {
+    border-radius: 3px !important;
+}
+.swal2-confirm {
+    background-color: var(--primary-accent) !important;
+}

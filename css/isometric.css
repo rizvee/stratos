@@ -1,0 +1,132 @@
+/* css/isometric.css */
+
+:root {
+    /* Ensure these are defined, typically in style.css but good to remember for this file's context */
+    /* --iso-angle-x: 45deg; */
+    /* --iso-angle-z: 30deg; */
+    /* --iso-character-size: 30px; */
+}
+
+#iso-world {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--iso-angle-x)) rotateZ(var(--iso-angle-z));
+    scale: 0.7; /* Default scale, can be adjusted by JS */
+    transition: transform 0.5s ease-out, scale 0.5s ease-out;
+}
+
+.game-zone {
+    position: absolute;
+    width: 800px; /* Conceptual size of the zone's interactive area */
+    height: 800px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Center the zone content */
+    transform-style: preserve-3d;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
+}
+
+.game-zone.active-zone {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s; /* Ensure transition applies immediately when becoming active */
+}
+
+.iso-object, .iso-building {
+    position: absolute;
+    transform-style: preserve-3d;
+    width: var(--w, 50px);
+    height: var(--d, 50px); /* Using 'd' for depth on the isometric plane (visual height) */
+    transform: translate3d(var(--x, 0px), var(--y, 0px), var(--z, 0px)); /* X, Y on plane, Z is height */
+    cursor: pointer;
+    /* Top face styling is applied directly to these elements */
+    background-color: var(--bg-color, #777777);
+    border: 1px solid rgba(0,0,0,0.3);
+    box-sizing: border-box;
+}
+
+/* Faces for cuboid shapes */
+.iso-object::before, .iso-object::after,
+.iso-building::before, .iso-building::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 1px solid rgba(0,0,0,0.3);
+    box-sizing: border-box;
+}
+
+/* Front face of cuboids */
+.iso-object::before, .iso-building::before {
+    width: 100%; /* Matches parent's width (--w) */
+    height: var(--h, 50px); /* Actual 3D height of the object */
+    background-color: color-mix(in srgb, var(--bg-color, #777777) 80%, black); /* Slightly darker */
+    transform-origin: top left;
+    transform: rotateX(-90deg) translateY(calc(-1 * var(--h, 50px)));
+}
+
+/* Side face of cuboids */
+.iso-object::after, .iso-building::after {
+    width: var(--d, 50px); /* Matches parent's depth (visual height on iso plane) */
+    height: var(--h, 50px); /* Actual 3D height of the object */
+    background-color: color-mix(in srgb, var(--bg-color, #777777) 60%, black); /* Even darker */
+    transform-origin: top left;
+    transform: translateX(var(--w, 50px)) rotateY(90deg) translateX(calc(-1 * var(--d, 50px)));
+}
+
+/* Characters and SVG-based objects */
+.iso-character, .iso-object.svg-object /* Combine rules for elements primarily styled by background-image */ {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom; /* Good default for character sprites */
+    cursor: pointer;
+    z-index: 10; /* Default stacking for characters/important items */
+
+    /* Default dimensions, can be overridden by inline --w, --h-svg */
+    width: var(--w, var(--iso-character-size));
+    height: var(--h-svg, var(--iso-character-size)); /* Perceived height for SVG/flat items */
+
+    /* Transformation to make them "stand up" and face camera */
+    transform:
+        translate3d(var(--x, 0px), var(--y, 0px), calc(var(--z, 0px) + (var(--h-svg, var(--iso-character-size)) / 2)))
+        rotateX(calc(-1 * var(--iso-angle-x)))
+        rotateZ(calc(-1 * var(--iso-angle-z)));
+
+    /* SVG objects usually don't need their own colored background or borders if the SVG is complete */
+    background-color: transparent; /* Override from .iso-object if .svg-object is also applied */
+    border: none; /* Override from .iso-object */
+}
+
+/* Hide pseudo-elements for SVG objects as they define their own appearance */
+.iso-object.svg-object::before, .iso-object.svg-object::after {
+    display: none;
+}
+
+/* Fallback for .iso-character if not an .svg-object and no background-image is set */
+.iso-character:not(.svg-object) {
+    background-color: var(--char-color, #FFFFFF); /* Fallback if SVG fails or not used */
+    /* If it's a non-SVG character, you might want a simple shape */
+    /* border-radius: 50%; */ /* e.g. for a simple circle character */
+}
+
+
+/* Solar Panel: Front and side faces are thinner */
+.solar-panel::before { /* Front face */
+    height: var(--h, 5px); /* Thin */
+    transform: rotateX(-90deg) translateY(calc(-1 * var(--h, 5px)));
+}
+.solar-panel::after { /* Side face */
+    height: var(--h, 5px); /* Thin */
+}
+
+/* Pod items (often SVG and need to stand up like characters) */
+.pod-item {
+    /* Similar transforms to .iso-character if they need to stand up */
+    /* Dimensions and SVG specific height are set via --w, --d, --h-svg inline */
+    /* The .svg-object class is usually applied to .pod-item as well */
+}

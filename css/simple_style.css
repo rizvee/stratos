@@ -1,0 +1,126 @@
+/* Basic Reset / Setup */
+body {
+    font-family: 'Roboto', sans-serif; /* Assuming Roboto is still desired from old head */
+    background-color: #1A1D23; /* Dark background */
+    color: #E0E0E0; /* Light text */
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    user-select: none;
+}
+
+/* Isometric World Container */
+#iso-world {
+    width: 80vw; /* Adjust as needed */
+    height: 80vh; /* Adjust as needed */
+    transform-style: preserve-3d;
+    transform: rotateX(55deg) rotateZ(-45deg); /* Common isometric angles */
+    border: 1px solid #555; /* Optional: for visualizing the area */
+    position: relative; /* For positioning children */
+}
+
+/* Player Character */
+#player-character {
+    width: 30px;
+    height: 30px;
+    background-color: #4FC3F7; /* Bright blue, placeholder */
+    position: absolute; /* Positioned within iso-world based on CSS vars */
+    /* Centering the block itself if x,y,z refer to its center */
+    transform:
+        translateX(calc(var(--x) * 1px - 50%))
+        translateY(calc(var(--y) * 1px - 50%))
+        translateZ(calc(var(--z) * 1px));
+    border: 1px solid #FFF; /* Make it visible */
+}
+
+/* HUD */
+#hud {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    z-index: 100;
+}
+
+#energy-level {
+    font-weight: bold;
+}
+
+/* Message Box */
+#message-box {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    background-color: rgba(20, 20, 30, 0.9);
+    border: 1px solid #4FC3F7; /* Accent color */
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 200;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+#message-box p {
+    margin: 0 0 10px 0;
+}
+
+#message-close-btn {
+    padding: 8px 15px;
+    background-color: #4FC3F7;
+    color: #1A1D23;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#message-close-btn:hover {
+    opacity: 0.8;
+}
+
+/* Ensure old complex CSS files are not imported or linked if simple_style.css is meant to be standalone for now */
+/* For instance, delete files css/style.css, css/isometric.css, css/zones.css, css/ui.css if they are no longer needed, */
+/* or ensure index.html only links to simple_style.css */
+/* This subtask only creates simple_style.css */
+
+/* Resource Node */
+.resource-node {
+    width: 25px;
+    height: 25px;
+    background-color: #FFD700; /* Gold color for resource */
+    border: 1px solid #FFF;
+    position: absolute; /* Positioned within iso-world */
+    transform:
+        translateX(calc(var(--x) * 1px - 50%))
+        translateY(calc(var(--y) * 1px - 50%))
+        translateZ(calc(var(--z) * 1px));
+    cursor: pointer; /* Indicate it's clickable */
+}
+
+.resource-node.used {
+    background-color: #777; /* Grey out when used */
+    cursor: default;
+}
+
+/* NPC */
+.npc {
+    width: 30px;
+    height: 30px;
+    background-color: #90EE90; /* Light green for NPC */
+    border: 1px solid #FFF;
+    position: absolute; /* Positioned within iso-world */
+    transform:
+        translateX(calc(var(--x) * 1px - 50%))
+        translateY(calc(var(--y) * 1px - 50%))
+        translateZ(calc(var(--z) * 1px));
+    cursor: pointer; /* Indicate it's clickable */
+    border-radius: 50%; /* Make NPCs circular */
+}

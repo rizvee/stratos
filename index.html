@@ -4,193 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stratos - Isometric Sci-Fi Sim RPG</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/isometric.css">
-    <link rel="stylesheet" href="css/zones.css">
-    <link rel="stylesheet" href="css/ui.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏙️</text></svg>">
+    <link rel="stylesheet" href="css/simple_style.css">
 </head>
 <body>
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <p>Loading Stratos...</p>
+    <div id="iso-world">
+        <div id="player-character" style="--x: 50; --y: 50; --z: 0;"></div>
+        <div id="resource-node-1" class="interactive resource-node" data-type="resource" style="--x: 100; --y: 100; --z: 0;"></div>
+        <div id="resource-node-2" class="interactive resource-node" data-type="resource" style="--x: 150; --y: 200; --z: 0;"></div>
+        <div id="resource-node-3" class="interactive resource-node" data-type="resource" style="--x: 220; --y: 80; --z: 0;"></div>
+        <div id="npc-questgiver" class="interactive npc" data-type="npc" style="--x: 200; --y: 50; --z: 0;"></div>
     </div>
 
-    <div id="game-container" style="display: none;">
-        <!-- HUD Elements -->
-        <div id="hud">
-            <div id="player-stats">
-                <span><i class="fas fa-user"></i> <span id="player-name">Citizen</span></span>
-                <span><i class="fas fa-bolt"></i> Energy: <span id="energy-level">100</span></span>
-                <span><i class="fas fa-seedling"></i> Food: <span id="food-level">100</span></span>
-                <span><i class="fas fa-users"></i> Rep: <span id="reputation-level">0</span></span>
-                <span><i class="fas fa-clock"></i> <span id="game-time">00:00</span></span>
-            </div>
-            <div id="game-menu">
-                <button id="inventory-btn" data-tooltip="Inventory (I)"><i class="fas fa-briefcase"></i></button>
-                <button id="quests-btn" data-tooltip="Quests (Q)"><i class="fas fa-scroll"></i></button>
-                <button id="map-btn" data-tooltip="Zone Map (M)"><i class="fas fa-map-marked-alt"></i></button>
-                <button id="settings-btn" data-tooltip="Settings (Esc)"><i class="fas fa-cog"></i></button>
-            </div>
-        </div>
-
-        <!-- Main Game World - Isometric Viewport -->
-        <div id="world-viewport">
-            <div id="iso-world">
-                <!-- Player Character (Common to all zones, positioned by JS) -->
-                <div id="player-character" class="iso-character svg-object"
-                     style="--x:80; --y:80; --z:0; --w:35px; --h-svg:45px;
-                            background-image: url('https://www.svgrepo.com/show/397549/robot-face.svg');"
-                     data-tooltip="Nova (You)">
-                </div>
-
-                <!-- Zone: Rooftop Commune -->
-                <div id="zone-rooftop-commune" class="game-zone">
-                    <div class="zone-title">Rooftop Commune</div>
-                    <div class="iso-building" style="--x:150; --y:150; --z:0; --w:250px; --d:200px; --h:50px;" data-tooltip="Community Hub">
-                        <div id="player-pod-area" style="position:absolute; transform-style: preserve-3d; top: 20px; left: 20px;">
-                            <div class="iso-object player-pod" style="--x:0; --y:0; --z:0; --w:70px; --d:60px; --h:40px;" data-tooltip="Your Pod (Click to Interact)">
-                                <!-- Pod items injected by JS -->
-                            </div>
-                        </div>
-                        <div class="iso-object solar-panel" style="--x:10; --y:150; --z:50; --w:80px; --d:30px; --h:5px;" data-tooltip="Solar Array Alpha"></div>
-                        <div class="iso-object solar-panel" style="--x:100; --y:150; --z:50; --w:80px; --d:30px; --h:5px;" data-tooltip="Solar Array Beta"></div>
-                    </div>
-                    <div class="iso-object rooftop-planter" style="--x:50; --y:20; --z:0; --w:80px; --d:30px; --h:20px;" data-tooltip="Community Herb Garden">
-                        <div class="plant-fill"></div>
-                    </div>
-                    <div class="iso-object rooftop-planter" style="--x:50; --y:250; --z:0; --w:60px; --d:60px; --h:20px;" data-tooltip="Zen Garden">
-                         <div class="plant-fill" style="background-color: #E0E0E0;"></div> <!-- Sand color -->
-                    </div>
-                    <div class="iso-character npc svg-object" id="harmonist-elder-npc"
-                         style="--x:300; --y:100; --z:0; --w:30px; --h-svg:40px;
-                                background-image: url('https://www.svgrepo.com/show/409008/wise-elder-old.svg');"
-                         data-tooltip="Harmonist Elder Kai">
-                    </div>
-                    <div class="iso-character npc svg-object"
-                         style="--x:100; --y:300; --z:0; --w:28px; --h-svg:38px; --char-color: #FFCDD2;
-                                background-image: url('https://www.svgrepo.com/show/498315/girl-student.svg');"
-                         data-tooltip="Lila, Resident Techie">
-                    </div>
-                </div>
-
-                <!-- Zone: Vertical Farm -->
-                <div id="zone-vertical-farm" class="game-zone">
-                    <div class="zone-title">Kestrel Vertical Farms</div>
-                    <div class="iso-building farm-tower" style="--x:100; --y:100; --z:0; --w:200px; --d:200px; --h:300px;" data-tooltip="Main Farming Spire">
-                        <!-- Farm levels and plots are generated by JS (VerticalFarmZone.js) -->
-                        <div class="farm-level" style="--level-z:50px;"></div>
-                        <div class="farm-level" style="--level-z:150px;"></div>
-                        <div class="farm-level" style="--level-z:250px;"></div>
-                    </div>
-                    <div class="iso-object" style="--x:350; --y:100; --z:0; --w:80px; --d:120px; --h:60px; --bg-color: #A1887F;" data-tooltip="Nutrient Processing Unit">
-                        <div class="iso-object" style="--x:20; --y:20; --z:60; --w:15px; --d:15px; --h:30px; --bg-color:var(--power-color);" data-tooltip="Energy Node"></div>
-                    </div>
-                     <div class="iso-character npc svg-object"
-                         style="--x:380; --y:250; --z:0; --w:32px; --h-svg:42px;
-                                background-image: url('https://www.svgrepo.com/show/500390/farmer.svg');"
-                         data-tooltip="Lead Botanist Rhea">
-                    </div>
-                </div>
-                
-                <!-- Zone: Underground Transit Hub -->
-                <div id="zone-underground-transit" class="game-zone">
-                    <div class="zone-title">GridLink Central Station</div>
-                    <div class="iso-object train-platform" style="--x:50; --y:50; --z:0; --w:500px; --d:150px; --h:10px;" data-tooltip="Platform A">
-                        <div class="platform-line" style="--x:10px; --y:0px; --h:10px;"></div>
-                        <div class="platform-line" style="--x:485px; --y:0px; --h:10px;"></div>
-                        <div class="iso-object train" style="--x:20; --y:20; --z:10; --w:200px; --d:40px; --h:50px;" data-tooltip="Maglev Express (To Sector Gamma)">
-                            <div class="train-window" style="left: 20%; top: 10px; width: 15%; height: 20px; transform: translateZ(50px) rotateX(-90deg);"></div>
-                            <div class="train-window" style="left: 50%; top: 10px; width: 15%; height: 20px; transform: translateZ(50px) rotateX(-90deg);"></div>
-                        </div>
-                    </div>
-                     <div class="iso-object" style="--x:600; --y:100; --z:0; --w:80px; --d:80px; --h:30px; --bg-color:#303030;" data-tooltip="Ticketing Kiosk"></div>
-                     <div class="iso-character npc svg-object"
-                         style="--x:100; --y:250; --z:0; --w:30px; --h-svg:40px;
-                                background-image: url('https://www.svgrepo.com/show/494896/security-guard-member.svg');"
-                         data-tooltip="Station Guard Rex">
-                    </div>
-                </div>
-
-                <!-- Zone: Cyber Alley -->
-                <div id="zone-cyber-alley" class="game-zone">
-                    <div class="zone-title">Neon Serpent Alley</div>
-                    <div class="iso-building alley-building-facade" style="--x:50; --y:50; --z:0; --w:150px; --d:10px; --h:200px;" data-tooltip="Glitchy Emporium (Closed)"></div>
-                    <div class="iso-building alley-building-facade" style="--x:250; --y:50; --z:0; --w:10px; --d:150px; --h:180px;" data-tooltip="Data Haven Firewall"></div>
-                    <div class="neon-sign" style="--x:60; --y:60; --z:195px; --sign-color: #FF00FF; font-size: 10px;" data-tooltip="!Blinky's Bits!">NO REFUNDS</div>
-                    <div class="neon-sign" style="--x:255px; --y:100; --z:175px; --sign-color: #00FFFF; font-size: 14px; transform: translate3d(var(--x), var(--y), var(--z)) rotateX(-90deg) rotateY(90deg);" data-tooltip="<Code Injection>">NODE ACCESS</div>
-                    <div class="iso-object data-conduit" style="--x:10; --y:300; --z:5px; --w:300px; --d:10px; --h:10px;" data-tooltip="Exposed Data Stream"></div>
-                     <div class="iso-character npc svg-object"
-                         style="--x:150; --y:250; --z:0; --w:28px; --h-svg:38px;
-                                background-image: url('https://www.svgrepo.com/show/521978/hacker.svg');"
-                         data-tooltip="Whisper (Null Infiltrator)">
-                    </div>
-                </div>
-
-                <!-- Zone: Drone Port -->
-                <div id="zone-drone-port" class="game-zone">
-                    <div class="zone-title">SkyWatch Drone Port</div>
-                    <div class="iso-object landing-pad" style="--x:100; --y:100; --z:0; --w:100px; --d:100px; --h:10px;" data-tooltip="Landing Pad Alpha-1">
-                        <!-- JS could add landing pad lights dynamically -->
-                    </div>
-                    <div class="iso-object landing-pad" style="--x:300; --y:150; --z:0; --w:80px; --d:80px; --h:10px;" data-tooltip="Landing Pad Beta-3"></div>
-                    <div class="iso-object drone-object" style="--x:120; --y:120; --z:10; --bg-color:#CFD8DC;" data-tooltip="Scout Drone XR-5"></div>
-                    <div class="iso-object" style="--x:50; --y:300; --z:0; --w:150px; --d:80px; --h:70px; --bg-color:#455A64;" data-tooltip="Drone Control Tower">
-                         <div class="iso-object" style="--x:10; --y:10; --z:70; --w:30px; --d:30px; --h:20px; --bg-color:var(--power-color);" data-tooltip="Primary Antenna"></div>
-                    </div>
-                </div>
-
-                <!-- Zone: Legacy Core -->
-                <div id="zone-legacy-core" class="game-zone">
-                    <div class="zone-title">The Legacy Core (Restricted)</div>
-                    <div class="iso-object data-archive-unit" style="--x:100; --y:100; --z:0; --w:80px; --d:80px; --h:120px;" data-tooltip="Archive Unit 734">
-                        <div class="data-stream-effect"></div>
-                    </div>
-                    <div class="iso-object data-archive-unit" style="--x:250; --y:150; --z:0; --w:100px; --d:60px; --h:100px;" data-tooltip="Archive Unit 201">
-                        <div class="data-stream-effect"></div>
-                    </div>
-                    <div class="iso-object data-archive-unit" style="--x:150; --y:300; --z:0; --w:60px; --d:100px; --h:150px;" data-tooltip="Corrupted Archive Omega">
-                         <div class="data-stream-effect" style="--primary-accent: red;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dialogue Box -->
-        <div id="dialogue-box" style="display: none;">
-            <p id="dialogue-speaker"></p>
-            <p id="dialogue-text"></p>
-            <div id="dialogue-options"></div>
-        </div>
-
-        <!-- Tooltip -->
-        <div id="tooltip"></div>
+    <div id="hud">
+        Energy: <span id="energy-level">100</span>
     </div>
 
-    <!-- External Libraries First -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <div id="message-box" style="display: none;">
+        <p id="message-text"></p>
+        <button id="message-close-btn">Close</button>
+    </div>
 
-    <!-- Your Game Scripts - ORDER IS ABSOLUTELY CRITICAL -->
-    <script src="js/utils.js"></script>             <!-- Utilities, no game logic dependencies -->
-    <script src="js/config.js"></script>            <!-- GameConfig DEFINITION - MUST BE LOADED EARLY -->
-
-    <script src="js/uiManager.js"></script>         <!-- Uses Utils, potentially GameConfig for some UI elements -->
-    <script src="js/player.js"></script>            <!-- USES GameConfig -->
-    <script src="js/ecoManager.js"></script>        <!-- Uses Player, GameConfig, Utils -->
-    
-    <!-- Zone specific logic can be loaded here. Ensure they don't try to access global 'game' instance before it's made in main.js -->
-    <!-- If zone classes are just definitions, this order is fine. If they try to *use* GameManager instance, they should be after gameManager.js or take gameManager as constructor arg -->
-    <script src="js/zones/rooftopCommune.js"></script>
-    <script src="js/zones/verticalFarm.js"></script>
-    <!-- Add other zone JS files here (e.g., js/zones/cyberAlley.js, js/zones/transitHub.js) if you create them -->
-
-    <script src="js/narrativeManager.js"></script>  <!-- Uses Player, UIManager, GameConfig -->
-    <script src="js/gameManager.js"></script>       <!-- CREATES Player, UIManager, etc. USES GameConfig -->
-    <script src="js/main.js"></script>              <!-- Entry point, CREATES GameManager, KICKS EVERYTHING OFF -->
-
+    <script src="js/simple_game.js"></script>
 </body>
 </html>
